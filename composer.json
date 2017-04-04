@@ -1,0 +1,10 @@
+{
+  "name": "kyoya-de/metached",
+  "description": "This is an OXID module to automically manage the activation state in OXID eShops. It will keep the order of extension and their activation state.",
+  "type": "oxid-module",
+  "license": "MIT",
+  "require": {
+    "roave/security-advisories":"dev-master",
+    "composer/installers": "^1.2"
+  }
+}
