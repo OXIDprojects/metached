@@ -12,10 +12,17 @@ $aModule = [
     'thumbnail'   => 'kyoya-de.github.png',
     'version'     => '0.0.1',
     'author'      => 'Stefan Krenz',
-    'url'         => 'https://github.com/kyoya-de',
+    'url'         => 'https://github.com/kyoya-de/metached',
     'email'       => 'info@kyoya.de',
-    'extend'      => [],
-    'files'       => [],
+    'extend'      => [
+        'oxModuleInstaller' => "{$moduleId}/core/MetachedOxModuleInstaller",
+    ],
+    'files'       => [
+        'MetachedSortConfig' => "{$moduleId}/controller/admin/MetachedSortConfig.php",
+    ],
+    'templates' => [
+        'MetachedSortConfig.tpl' => "{$moduleId}/views/admin/tpl/MetachedSortConfig.tpl",
+    ],
     'events'      => [],
     'blocks'      => [],
     'settings'    => [],

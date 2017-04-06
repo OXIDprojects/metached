@@ -1,0 +1,30 @@
+* {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.sort-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -5px;
+}
+
+.sort-extended-class {
+    flex: 0 0 20%;
+    margin: 5px;
+    border: 1px solid #222;
+    padding: 5px;
+}
+
+.sort-overview-order {
+    font-size: 0.8em;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+}
+.sort-sortable {
+    /*padding:0;*/
+    /*list-style: none;*/
+}
