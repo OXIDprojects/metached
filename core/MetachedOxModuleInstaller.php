@@ -20,18 +20,16 @@ class MetachedOxModuleInstaller extends MetachedOxModuleInstaller_parent
         $sorted         = [];
 
         foreach ($extensions as $extendedClass => $extension) {
-            if (isset($sortDefinition[$extendedClass])) {
-                usort(
-                    $extension,
-                    function ($a, $b) use ($extendedClass, $sortDefinition) {
-                        if ($sortDefinition[$extendedClass][$a] === $sortDefinition[$extendedClass][$b]) {
-                            return 0;
-                        }
-
-                        return $sortDefinition[$extendedClass][$a] < $sortDefinition[$extendedClass][$b] ? -1 : 1;
+            ArrayUtils::mergeSort(
+                $extension,
+                function ($a, $b) use ($extendedClass, $sortDefinition) {
+                    if ($sortDefinition[$extendedClass][$a] === $sortDefinition[$extendedClass][$b]) {
+                        return 0;
                     }
-                );
-            }
+
+                    return $sortDefinition[$extendedClass][$a] < $sortDefinition[$extendedClass][$b] ? -1 : 1;
+                }
+            );
 
             $sorted[$extendedClass] = $extension;
         }

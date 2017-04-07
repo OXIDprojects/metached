@@ -15,12 +15,13 @@ $aModule = [
     'url'         => 'https://github.com/kyoya-de/metached',
     'email'       => 'info@kyoya.de',
     'extend'      => [
-        'oxModuleInstaller' => "{$moduleId}/core/MetachedOxModuleInstaller",
+        'oxmoduleinstaller' => "{$moduleId}/core/MetachedOxModuleInstaller",
     ],
     'files'       => [
         'MetachedSortConfig' => "{$moduleId}/controller/admin/MetachedSortConfig.php",
+        'ArrayUtils'         => "{$moduleId}/core/ArrayUtils.php",
     ],
-    'templates' => [
+    'templates'   => [
         'MetachedSortConfig.tpl' => "{$moduleId}/views/admin/tpl/MetachedSortConfig.tpl",
     ],
     'events'      => [],
