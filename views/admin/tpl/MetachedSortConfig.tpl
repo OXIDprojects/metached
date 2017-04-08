@@ -14,16 +14,16 @@
           type="text/css"
           integrity="sha384-Jselos8nGM89PT4COWBP/c2/Lj9sjMJ6IpQZD64CWQGd/c+Ks8MdS2kIWPHiRwiq"
           crossorigin="anonymous">
-    <link href="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/css/style.dist.css')}]?[{php}]echo time();[{/php}]"
+    <link href="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/css/style.dist.min.css')}]"
           rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
             integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
             crossorigin="anonymous"></script>
 
-    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/Sortable.min.js')}]?[{php}]echo time();[{/php}]"></script>
-    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/emitter.js')}]?[{php}]echo time();[{/php}]"></script>
-    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/metached.js')}]?[{php}]echo time();[{/php}]"></script>
+    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/Sortable.min.js')}]"></script>
+    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/emitter.js')}]"></script>
+    <script src="[{$oViewConf->getModuleUrl('kyoya-de/metached', 'public/js/metached.js')}]"></script>
 </head>
 <body>
 <div class="container">
