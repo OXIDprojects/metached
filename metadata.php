@@ -8,7 +8,7 @@
  * @author  Stefan Krenz <krenz.stefan@googlemail.com>
  */
 
-$moduleId   = 'kyoya-de/metached';
+$moduleId = 'kyoya-de/metached';
 
 $sMetadataVersion = '1.1';
 
@@ -26,14 +26,17 @@ $aModule = [
         'oxmoduleinstaller' => "{$moduleId}/core/MetachedOxModuleInstaller",
     ],
     'files'       => [
-        'MetachedSortConfig' => "{$moduleId}/controller/admin/MetachedSortConfig.php",
-        'ArrayUtils'         => "{$moduleId}/core/ArrayUtils.php",
-        'ModuleSorter'       => "{$moduleId}/core/ModuleSorter.php",
+        'MetachedSortConfig'   => "{$moduleId}/controller/admin/MetachedSortConfig.php",
+        'ArrayUtils'           => "{$moduleId}/core/ArrayUtils.php",
+        'ModuleSorter'         => "{$moduleId}/core/ModuleSorter.php",
+        'MetachedModuleEvents' => "{$moduleId}/core/MetachedModuleEvents.php",
     ],
     'templates'   => [
         'MetachedSortConfig.tpl' => "{$moduleId}/views/admin/tpl/MetachedSortConfig.tpl",
     ],
-    'events'      => [],
+    'events'      => [
+        'onActivate' => 'MetachedModuleEvents::onActivate',
+    ],
     'blocks'      => [],
     'settings'    => [
         [

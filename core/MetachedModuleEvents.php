@@ -10,9 +10,9 @@
 
 class MetachedModuleEvents
 {
-    public function onActivate()
+    public static function onActivate()
     {
-        if (null !== $this->fetchSortDefinition()) {
+        if (null !== self::fetchSortDefinition()) {
             return;
         }
 
@@ -46,7 +46,7 @@ class MetachedModuleEvents
     /**
      * @return null|array
      */
-    private function fetchSortDefinition()
+    private static function fetchSortDefinition()
     {
         return oxRegistry::getConfig()->getShopConfVar(
             'moduleSortDefinition',
