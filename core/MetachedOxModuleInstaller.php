@@ -2,38 +2,27 @@
 
 class MetachedOxModuleInstaller extends MetachedOxModuleInstaller_parent
 {
+    /**
+     * @var ModuleSorter
+     */
+    private $sorter;
+
     protected function _mergeModuleArrays($aAllModuleArray, $aAddModuleArray)
     {
         $merged = parent::_mergeModuleArrays($aAllModuleArray, $aAddModuleArray);
 
-        return $this->sortModuleExtensions($merged);
+        return $this->getSorter()->sortModules($merged);
     }
 
     /**
-     * @param string[][] $extensions
-     *
-     * @return string[][]
+     * @return ModuleSorter
      */
-    protected function sortModuleExtensions($extensions)
+    private function getSorter()
     {
-        $sortDefinition = oxRegistry::getConfig()->getConfigParam('moduleSortDefinition');
-        $sorted         = [];
-
-        foreach ($extensions as $extendedClass => $extension) {
-            ArrayUtils::mergeSort(
-                $extension,
-                function ($a, $b) use ($extendedClass, $sortDefinition) {
-                    if ($sortDefinition[$extendedClass][$a] === $sortDefinition[$extendedClass][$b]) {
-                        return 0;
-                    }
-
-                    return $sortDefinition[$extendedClass][$a] < $sortDefinition[$extendedClass][$b] ? -1 : 1;
-                }
-            );
-
-            $sorted[$extendedClass] = $extension;
+        if (null === $this->sorter) {
+            $this->sorter = new ModuleSorter();
         }
 
-        return $sorted;
+        return $this->sorter;
     }
 }

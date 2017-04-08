@@ -20,11 +20,25 @@ $aModule = [
     'files'       => [
         'MetachedSortConfig' => "{$moduleId}/controller/admin/MetachedSortConfig.php",
         'ArrayUtils'         => "{$moduleId}/core/ArrayUtils.php",
+        'ModuleSorter'       => "{$moduleId}/core/ModuleSorter.php",
     ],
     'templates'   => [
         'MetachedSortConfig.tpl' => "{$moduleId}/views/admin/tpl/MetachedSortConfig.tpl",
     ],
     'events'      => [],
     'blocks'      => [],
-    'settings'    => [],
+    'settings'    => [
+        [
+            'name'  => 'moduleSortDefinition',
+            'type'  => 'aarr',
+            'value' => [],
+        ],
+        [
+            'group'       => 'defaults',
+            'name'        => 'defaultUnknownPosition',
+            'type'        => 'select',
+            'constraints' => '-1|1',
+            'value'       => -1,
+        ],
+    ],
 ];
