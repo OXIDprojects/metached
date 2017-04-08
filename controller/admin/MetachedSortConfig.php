@@ -22,6 +22,11 @@ class MetachedSortConfig extends oxAdminDetails
      */
     private $defaultUnknownPosition;
 
+    public function getTemplateName()
+    {
+        return 'MetachedSortConfig.tpl';
+    }
+
     public function render()
     {
         parent::render();
@@ -34,30 +39,6 @@ class MetachedSortConfig extends oxAdminDetails
         $this->_aViewData['sortConfig']             = $this->sortConfig;
 
         return 'MetachedSortConfig.tpl';
-    }
-
-    private function buildModuleList()
-    {
-        $moduleList = oxNew('oxmodulelist');
-        /** @var oxModule[] $modules */
-        $modules = $moduleList->getModulesFromDir(__DIR__ . '/../../../../');
-
-        $this->moduleTitles = [];
-        $realModules        = [];
-        foreach ($modules as $module) {
-            $extensions = $module->getExtensions();
-            foreach ($extensions as $oxidClass => $extension) {
-                $this->moduleTitles[$oxidClass][$extension] = $module->getTitle();
-
-                $realModules[$oxidClass][] = $extension;
-            }
-        }
-
-        $sorter                       = new ModuleSorter();
-        $this->sortConfig             = $sorter->getSortDefinition();
-        $this->defaultUnknownPosition = $sorter->getDefaultUnknownPosition();
-        $this->moduleList             = $sorter->sortModules($realModules);
-        ksort($this->moduleList);
     }
 
     public function save()
@@ -103,6 +84,30 @@ class MetachedSortConfig extends oxAdminDetails
         exit();
     }
 
+    private function buildModuleList()
+    {
+        $moduleList = oxNew('oxmodulelist');
+        /** @var oxModule[] $modules */
+        $modules = $moduleList->getModulesFromDir(__DIR__ . '/../../../../');
+
+        $this->moduleTitles = [];
+        $realModules        = [];
+        foreach ($modules as $module) {
+            $extensions = $module->getExtensions();
+            foreach ($extensions as $oxidClass => $extension) {
+                $this->moduleTitles[$oxidClass][$extension] = $module->getTitle();
+
+                $realModules[$oxidClass][] = $extension;
+            }
+        }
+
+        $sorter                       = new ModuleSorter();
+        $this->sortConfig             = $sorter->getSortDefinition();
+        $this->defaultUnknownPosition = $sorter->getDefaultUnknownPosition();
+        $this->moduleList             = $sorter->sortModules($realModules);
+        ksort($this->moduleList);
+    }
+
     /**
      * @param $translator
      *
@@ -138,10 +143,5 @@ class MetachedSortConfig extends oxAdminDetails
         echo json_encode($data);
 
         exit();
-    }
-
-    public function getTemplateName()
-    {
-        return 'MetachedSortConfig.tpl';
     }
 }
