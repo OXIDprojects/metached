@@ -2,6 +2,17 @@
 
 class MetachedSortConfig extends oxAdminDetails
 {
+    private static $objectTypeGroups = [
+        oxAdminDetails::class    => 'METACHED_OBJECT_TYPE_ADMIN_DETAILS',
+        oxAdminList::class       => 'METACHED_OBJECT_TYPE_ADMIN_LIST',
+        oxAdminView::class       => 'METACHED_OBJECT_TYPE_ADMIN_VIEW',
+        ajaxListComponent::class => 'METACHED_OBJECT_TYPE_ADMIN_AJAX',
+        oxWidget::class          => 'METACHED_OBJECT_TYPE_WIDGET',
+        oxUBase::class           => 'METACHED_OBJECT_TYPE_CONTROLLER',
+        oxBase::class            => 'METACHED_OBJECT_TYPE_MODEL',
+        oxView::class            => 'METACHED_OBJECT_TYPE_COMPONENT',
+    ];
+
     /**
      * @var int[][]
      */
@@ -22,6 +33,11 @@ class MetachedSortConfig extends oxAdminDetails
      */
     private $defaultUnknownPosition;
 
+    /**
+     * @var string[]
+     */
+    private $groups;
+
     public function getTemplateName()
     {
         return 'MetachedSortConfig.tpl';
@@ -31,8 +47,13 @@ class MetachedSortConfig extends oxAdminDetails
     {
         parent::render();
 
-        $this->buildModuleList();
+        $grouping = $this->getGrouping();
 
+        $this->buildModuleList();
+        $this->buildGroups($grouping);
+
+        $this->_aViewData['moduleGroups']           = $this->groups;
+        $this->_aViewData['grouping']               = $grouping;
         $this->_aViewData['moduleList']             = $this->moduleList;
         $this->_aViewData['moduleTitles']           = $this->moduleTitles;
         $this->_aViewData['defaultUnknownPosition'] = $this->defaultUnknownPosition;
@@ -84,23 +105,62 @@ class MetachedSortConfig extends oxAdminDetails
         exit();
     }
 
+    private function buildGroups($groupType)
+    {
+        $translator = function ($languageKey) {
+            return oxRegistry::getLang()->translateString($languageKey);
+        };
+
+        $this->groups = [];
+        $oxidClasses  = array_keys($this->moduleTitles);
+
+        foreach ($oxidClasses as $oxidClass) {
+            if ('alpha' === $groupType) {
+                $groupId = strtoupper($oxidClass[0]);
+            } elseif ('object' === $groupType) {
+                $groupId = $this->getGroupIdFromClassName($oxidClass);
+            } else {
+                continue;
+            }
+
+            $this->groups[$translator($groupId)][] = $oxidClass;
+            asort($this->groups[$translator($groupId)]);
+        }
+
+        ksort($this->groups);
+    }
+
+    private function getGroupIdFromClassName($className)
+    {
+        if (class_exists($className)) {
+            $objectInstance = oxNew($className);
+            foreach (self::$objectTypeGroups as $baseClass => $groupId) {
+                if ($objectInstance instanceof $baseClass) {
+                    return $groupId;
+                }
+            }
+        }
+
+        return 'METACHED_OBJECT_TYPE_OTHER';
+    }
+
     private function buildModuleList()
     {
         $moduleList = oxNew('oxmodulelist');
         /** @var oxModule[] $modules */
         $modules = $moduleList->getModulesFromDir(__DIR__ . '/../../../../');
 
-        $this->moduleTitles = [];
-        $realModules        = [];
+        $moduleTitles = [];
+        $realModules  = [];
         foreach ($modules as $module) {
             $extensions = $module->getExtensions();
             foreach ($extensions as $oxidClass => $extension) {
-                $this->moduleTitles[$oxidClass][$extension] = $module->getTitle();
-
-                $realModules[$oxidClass][] = $extension;
+                $realModules[$oxidClass][]            = $extension;
+                $moduleTitles[$oxidClass][$extension] = $module->getTitle();
             }
         }
 
+        $this->moduleTitles           = $moduleTitles;
         $sorter                       = new ModuleSorter();
         $this->sortConfig             = $sorter->getSortDefinition();
         $this->defaultUnknownPosition = $sorter->getDefaultUnknownPosition();
@@ -143,5 +203,21 @@ class MetachedSortConfig extends oxAdminDetails
         echo json_encode($data);
 
         exit();
+    }
+
+    /**
+     * @return string
+     */
+    private function getGrouping()
+    {
+        $grouping        = oxRegistry::getSession()->getVariable('metached-grouping') ?: 'alpha';
+        $requestGrouping = oxRegistry::getConfig()->getRequestParameter('grouping');
+
+        if (null !== $requestGrouping) {
+            oxRegistry::getSession()->setVariable('metached-grouping', $requestGrouping);
+            $grouping = $requestGrouping;
+        }
+
+        return $grouping;
     }
 }

@@ -20,33 +20,55 @@
 <body>
 <div class="container">
     <h2 class="page-title">[{oxmultilang ident="METACHED_TITLE_CONFIG"}]</h2>
-    <div class="sort-container" id="sortContainer">
-        [{foreach from=$moduleList key="extendedClass" item="sortDefinition"}]
-            [{assign var="unknownPos" value=$sortConfig.$extendedClass.unknownPosition|default:$defaultUnknownPosition}]
-            <div class="sort-extended-class">
-                <h3 class="sort-title">[{$extendedClass}]</h3>
-                <div class="sort-overview">
-                    <div class="config-container">
-                        <label>[{oxmultilang ident="METACHED_TITLE_UNKNOWN_POS"}]
-                            <select class="sort-type" data-extended-class="[{$extendedClass}]">
-                                <option value="-1"[{if -1 == $unknownPos}] selected="selected"[{/if}]>
-                                    [{oxmultilang ident="METACHED_CAPTION_UNKNOWN_POS_BEGINNING"}]
-                                </option>
-                                <option value="1"[{if 1 == $unknownPos}] selected="selected"[{/if}]>
-                                    [{oxmultilang ident="METACHED_CAPTION_UNKNOWN_POS_END"}]
-                                </option>
-                            </select>
-                        </label>
-                    </div>
-                    <ol class="sort-sortable" data-extended-class="[{$extendedClass}]">
-                        [{foreach from=$sortDefinition key="order" item="moduleClass"}]
-                            <li class="sort-overview-order" data-module-class="[{$moduleClass}]">[{$moduleTitles.$extendedClass.$moduleClass|default:$moduleClass}]</li>
-                        [{/foreach}]
-                    </ol>
-                </div>
+    <div class="group-config">
+        <div class="group-config-type">
+            <label>[{oxmultilang ident="METACHED_TITLE_GROUP_BY"}]
+                <select class="group-config-type-group-by">
+                    <option value="alpha"[{if $grouping == 'alpha'}] selected="selected"[{/if}]>[{oxmultilang ident="METACHED_CAPTION_GROUP_BY_ALPHA"}]</option>
+                    <option value="object"[{if $grouping == 'object'}] selected="selected"[{/if}]>[{oxmultilang ident="METACHED_CAPTION_GROUP_BY_OBJECT"}]</option>
+                </select>
+            </label>
+        </div>
+        <div class="group-config-links">
+        [{foreach from=$moduleGroups|@array_keys item="group"}]
+            <div class="group-config-links-link">
+                <a href="#group-[{$group|@rawurlencode}]">[{oxmultilang ident=$group noerror=true}]</a>
             </div>
         [{/foreach}]
+        </div>
     </div>
+    [{foreach from=$moduleGroups key="group" item="groupClasses"}]
+        <div id="group-[{$group}]" class="group-title">[{oxmultilang ident=$group noerror=true}]</div>
+        <div class="sort-container" id="sortContainer">
+            [{foreach from=$groupClasses item="extendedClass"}]
+                [{assign var="sortDefinition" value=$moduleList.$extendedClass}]
+                [{assign var="unknownPos" value=$sortConfig.$extendedClass.unknownPosition|default:$defaultUnknownPosition}]
+                <div class="sort-extended-class">
+                    <h3 class="sort-title">[{$extendedClass}]</h3>
+                    <div class="sort-overview">
+                        <div class="config-container">
+                            <label>[{oxmultilang ident="METACHED_TITLE_UNKNOWN_POS"}]
+                                <select class="sort-type" data-extended-class="[{$extendedClass}]">
+                                    <option value="-1"[{if -1 == $unknownPos}] selected="selected"[{/if}]>
+                                        [{oxmultilang ident="METACHED_CAPTION_UNKNOWN_POS_BEGINNING"}]
+                                    </option>
+                                    <option value="1"[{if 1 == $unknownPos}] selected="selected"[{/if}]>
+                                        [{oxmultilang ident="METACHED_CAPTION_UNKNOWN_POS_END"}]
+                                    </option>
+                                </select>
+                            </label>
+                        </div>
+                        <ol class="sort-sortable" data-extended-class="[{$extendedClass}]">
+                            [{foreach from=$sortDefinition key="order" item="moduleClass"}]
+                                <li class="sort-overview-order"
+                                    data-module-class="[{$moduleClass}]">[{$moduleTitles.$extendedClass.$moduleClass|default:$moduleClass}]</li>
+                            [{/foreach}]
+                        </ol>
+                    </div>
+                </div>
+            [{/foreach}]
+        </div>
+    [{/foreach}]
 </div>
 
 <div id="responseStatus" class="response-status">
@@ -54,8 +76,9 @@
 </div>
 
 <script type="text/javascript">
+    var baseUrl = [{$oViewConf->getSslSelfLink()|@html_entity_decode|@json_encode}] + 'cl=MetachedSortConfig';
     (function () {
-        var m = new Metached([{$oViewConf->getSslSelfLink()|@html_entity_decode|@json_encode}]);
+        var m = new Metached(baseUrl + '&fnc=save');
         m.on('request.finished', function (response) {
             var statusElement = document.querySelector('#responseStatus');
             var classList = statusElement.classList;
@@ -83,7 +106,7 @@
          */
         const sortables = document.querySelectorAll('.sort-sortable');
 
-        document.querySelector('.sort-container').onchange = function(e) {
+        document.querySelector('.sort-container').onchange = function (e) {
             if (!e.target.classList.contains('sort-type')) {
                 return;
             }
@@ -91,6 +114,10 @@
             m.save(e.target.dataset.extendedClass, {
                 'unknownPos': e.target.value
             });
+        };
+
+        document.querySelector('.group-config-type-group-by').onchange = function(e) {
+            window.location.href = baseUrl + '&grouping=' + e.target.value;
         };
 
         m.createSortables(sortables);

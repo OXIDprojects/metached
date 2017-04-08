@@ -33,7 +33,7 @@ var Metached = (function () {
         storage[this.id = uid++] = {
             _response: {success: false, message: ''},
             _ajax: new XMLHttpRequest(),
-            _url: baseUrl + 'cl=MetachedSortConfig&fnc=save'
+            _url: baseUrl
         };
 
         Object.defineProperty(this, 'response', {
