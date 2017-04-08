@@ -1,6 +1,14 @@
 <?php
+/**
+ * This piece of software is released under the MIT license. Take a look at the LICENSE file.
+ *
+ * Feel free to copy and change the code, but never remove the original author! Pull requests are also welcome.
+ *
+ * @version 1.0.0
+ * @author  Stefan Krenz <krenz.stefan@googlemail.com>
+ */
+
 $moduleId   = 'kyoya-de/metached';
-$modulePath = __DIR__ . "/{$moduleId}";
 
 $sMetadataVersion = '1.1';
 
