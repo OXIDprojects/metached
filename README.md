@@ -3,6 +3,17 @@
 This is an OXID module to automically manage the order of class extensions in OXID. It will create a new entry in the OXID admin navigation,
 where you can configure the class extension order of your modules. 
 
+## Demonstration
+
+A demonstration can be found at <http://oxid-demo.kyoya.de/>. The database there is restored every hour.
+
+### Credentials
+
+To log-in into the OXID-Demo admin use this credentials:
+
+* Username: `oxid-admin`
+* Password: `oxid-admin`
+
 ## Installation
 
 The module must be installed to `/path/to/modules/kyoya-de/metached`.
